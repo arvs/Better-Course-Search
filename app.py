@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, jsonify
 import requests
 from bs4 import BeautifulSoup
-
+from db_logic import DBConnection
 app = Flask(__name__)
 app.debug = True
 
@@ -19,8 +19,13 @@ def index():
 
 @app.route('/search_for_prof')
 def search_for_prof():
+	db = DBConnection()
 	name = request.args.get("name","")
-	params = {"q" : name, 
+	classes = db.classes_for_name(name)
+	if classes is not None:
+		return jsonify(name=name, classes=classes)
+	params = {
+			  "q" : name, 
 			  "site" : "Directory_of_Classes", 
 			  "num" : 20, 
 			  "filter" : 0,
@@ -32,16 +37,19 @@ def search_for_prof():
 			  "ie" : "UTF-8",
 			  "client" : "DoC",
 			  "proxystylesheet" : "DoC",
-			  "proxyreload" : 1}
+			  "proxyreload" : 1
+			 }
 	search = requests.get("http://search.columbia.edu/search", params=params)
 	search_result = BeautifulSoup(search.content)
 	if search_result.find(id="empty") is None:
 		classes = []
 		for cls in search_result.find_all("a","l"):
 			if "Fall 2012" in "".join(map(str, cls.contents)):
-				classes.append(cls.get('href'))
+				x = cls.get('href')
+				classes.append(x)
+				db.insert('classes', teacher = name, link=x)
 		return jsonify(name=name, classes=classes)
-
+	db.insert('classes', teacher = name, no_classes=True)
 	return jsonify(name=name, classes=[])
 
 if __name__ == '__main__':
