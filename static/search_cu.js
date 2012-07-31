@@ -7,7 +7,7 @@ $(function(){
 		var wrap_a = function(arr){
 			s = ""
 			$(arr).each(function(k,v){
-				s+='<a href="'+ v + '">Class ' + (k+1)  + ', </a>';
+				s+='<a href="'+ v + '">Class ' + (k+1)  + ',</a>';
 			});
 			return s
 		}
