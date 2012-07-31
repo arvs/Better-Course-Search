@@ -35,9 +35,14 @@ def search_for_prof():
 			  "proxyreload" : 1}
 	search = requests.get("http://search.columbia.edu/search", params=params)
 	search_result = BeautifulSoup(search.content)
-	if search_result.find(id="empty") is not None:
-		return jsonify(name=name, result="True")
-	return jsonify(name=name, result="False")
+	if search_result.find(id="empty") is None:
+		classes = []
+		for cls in search_result.find_all("a","l"):
+			if "Fall 2012" in "".join(map(str, cls.contents)):
+				classes.append(cls.get('href'))
+		return jsonify(name=name, classes=classes)
+
+	return jsonify(name=name, classes=[])
 
 if __name__ == '__main__':
 	app.run()

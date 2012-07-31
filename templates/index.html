@@ -10,7 +10,7 @@
 		<script type="text/javascript" src={{js_url}}></script>
 	</head>
 	<body>
-		<div id="data">[{% for prof in profs[:-1] %}"{{profs[loop.index0]}}",{% endfor %}"{{profs[-1]}}"]</div>
+		<div id="data" style="visibility: hidden;">[{% for prof in profs[:-1] %}"{{profs[loop.index0]}}",{% endfor %}"{{profs[-1]}}"]</div>
 		<script type="text/javascript">
 			var profs = $('#data').text();
 			profs = profs.replace(/(\r\n|\n|\r)/gm,"");
