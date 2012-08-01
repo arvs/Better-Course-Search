@@ -47,10 +47,30 @@ def search_for_prof():
 			if "Fall 2012" in "".join(map(str, cls.contents)):
 				x = cls.get('href')
 				classes.append(x)
-				db.insert('classes', teacher = name, link=x)
+				db.insert('classes', Instructor = name, link=x)
 		return jsonify(name=name, classes=classes)
-	db.insert('classes', teacher = name, no_classes=True)
+	db.insert('classes', Instructor = name, no_classes=True)
 	return jsonify(name=name, classes=[])
+
+@app.route('/populate_class')
+def populate_class():
+	db = DBConnection()
+	name = request.args.get("name","")
+	links = [x['link'] for x in db.get("classes", Instructor=name)]
+	for link in links:
+		r = requests.get(link)
+		soup = BeautifulSoup(r.content)
+		print "processed, %s" % (r.status_code) 
+		rows = list(soup.find_all('tr'))[1:]
+		rowdict = {}
+		for row in rows[1:]:
+			row = filter(lambda x: x != '\n', row)
+			if len(row) == 2:
+				rowdict.update({row[0].get_text().strip() : row[1].get_text().strip()})
+		print rowdict
+		db.update("classes", {'Instructor': name, 'link':link},**rowdict)
+
+	return jsonify(links=links)
 
 if __name__ == '__main__':
 	app.run()

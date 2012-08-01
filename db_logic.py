@@ -17,4 +17,10 @@ class DBConnection(object):
 			return None
 
 	def insert(self, c, **kw):
-		db[c].insert(kw)
+		self.db[c].insert(kw)
+
+	def get(self, c, **kw):
+		return list(self.db[c].find(kw))
+
+	def update(self, c, match, **kw):
+		self.db[c].update(match, {'$set' : kw})

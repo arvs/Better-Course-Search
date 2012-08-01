@@ -13,3 +13,5 @@ def import_x(module, submodules):
 
 import_x("bs4", "BeautifulSoup")
 import_all("requests")
+import_x("db_logic", "DBConnection")
+ipapi.get().ex('db = DBConnection()')
