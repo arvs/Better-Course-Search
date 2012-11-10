@@ -13,5 +13,7 @@ def import_x(module, submodules):
 
 import_x("bs4", "BeautifulSoup")
 import_all("requests")
+# ipapi.get().ex('%load_ext autoreload')
+# ipapi.get().ex("%autoreload 2")
 import_x("db_logic", "DBConnection")
 ipapi.get().ex('conn = DBConnection()')
