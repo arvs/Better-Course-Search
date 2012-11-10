@@ -1,9 +1,0 @@
-#!/Users/arvind/Dev/GitHub/Better-Course-Search/bin/python
-# EASY-INSTALL-ENTRY-SCRIPT: 'ipython==0.13','console_scripts','ipcontroller'
-__requires__ = 'ipython==0.13'
-import sys
-from pkg_resources import load_entry_point
-
-sys.exit(
-   load_entry_point('ipython==0.13', 'console_scripts', 'ipcontroller')()
-)
